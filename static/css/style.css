@@ -1,0 +1,426 @@
+.password-container {
+   position: relative;
+   display: flex;
+   align-items: center;
+ }
+ 
+ .password-container input[type="password"], 
+ .password-container input[type="text"] {
+   width: 100%;
+   padding-right: 40px;
+ }
+ 
+ .password-container i {
+   position: absolute;
+   right: 10px;
+   cursor: pointer;
+   color: #eee;
+   font-size: 1.2rem;
+ }
+ 
+input[type="email"], 
+input[type="password"],
+input[type="text"] {
+  padding: 12px;
+  border: 2px solid #e6b7eca1;
+  border-radius: 20px;
+  background: transparent;
+  color: #eee;
+  font-size: 1rem;
+  outline: none;
+  font-family: "Poppins", system-ui;
+}
+
+input::placeholder {
+  color: #bfbfbf;
+}
+
+button[type="submit"] {
+  background-color: #e6b7eca1;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: "Poppins", system-ui;
+}
+
+button:hover {
+  background-color: #e951fda1;
+}
+
+p {
+  color: #eee;
+  text-align: center;
+  margin-top: 20px;
+}
+
+p a {
+  color: #e6b7eca1;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+p a:hover {
+  text-decoration: underline;
+}
+
+.sidebar a i {
+   margin-right: 8px; 
+}
+
+nav {
+  position: relative;
+  z-index: 1000;
+}
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative; 
+}
+
+nav li {
+  height: 50px;
+}
+
+nav a {
+  padding: 0 20px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  color: rgb(206, 206, 206);
+}
+.menu-button {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  cursor: pointer;
+  z-index: 1100; 
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -250px; 
+  height: 100vh;
+  width: 250px;
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  transition: right 0.3s ease; 
+}
+
+.sidebar li {
+  width: 100%;
+}
+
+.sidebar a {
+  width: 100%;
+  padding: 15px; 
+}
+
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", system-ui;
+  height: 100vh;
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  justify-content: center;
+  background: url(../img/background.jpg) no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.user-circle {
+  width: 70px; 
+  height: 70px;
+  border-radius: 50%;
+  overflow: hidden; 
+  border: 2px solid #e6b7eca1; 
+}
+
+.user-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+}
+
+.greeting {
+  color: #eee;
+  font-size: 1.5rem;
+  margin-top: 10px;
+}
+
+form {
+  display: flex;
+  width: 100%;
+}
+
+.container {
+  width: 90%; 
+  max-width: 400px; 
+  height: auto;
+  min-height: 400px;
+  padding: 30px; 
+  background: transparent;
+  border: 2px solid #e6b7eca1;
+  border-radius: 10px;
+  backdrop-filter: blur(15px);
+  
+}
+
+h1 {
+  color: #eee;
+  text-align: center;
+  margin-bottom: 24px; 
+  font-size: 2rem; 
+}
+
+.input-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px; 
+}
+
+.todo-input {
+  flex: 1;
+  outline: none;
+  padding: 8px 8px 8px 12px; 
+  background-color: transparent;
+  border: 2px solid #e6b7eca1;
+  border-radius: 20px;
+  color: #eee;
+  font-size: 14px; 
+  margin-right: 8px; 
+}
+
+.todo-input::placeholder {
+  color: #bfbfbf;
+  font-family: "Poppins", system-ui;
+}
+
+.add-button {
+  border: none;
+  outline: none;
+  background: #e6b7eca1;
+  color: #fff;
+  font-size: 20px; 
+  
+  cursor: pointer;
+  border-radius: 40px;
+  width: 40px; 
+  height: 40px; 
+}
+
+.empty-image {
+  margin: 55px auto 0; 
+  display: block;
+  max-width: 80%; 
+  height: auto;
+}
+
+.todo {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #463c7b;
+  border-radius: 5px;
+  margin: 8px 0; 
+  padding: 8px 10px;
+  border: 2px solid #e6b7eca1;
+  transition: all 0.2s ease;
+}
+
+.todo:first-child {
+  margin-top: 0;
+}
+
+.todo:last-child {
+  margin-bottom: 0;
+}
+
+.todo:hover {
+  background-color:#e6b7eca1;
+}
+
+.todo label {
+  cursor: pointer;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  font-family: "Poppins", system-ui;
+  color: #eee;
+  font-size: 14px; 
+}
+
+.todo span {
+  padding-left: 16px; 
+  position: relative;
+  cursor: pointer;
+}
+
+span::before {
+  content: "";
+  height: 18px; 
+  width: 18px; 
+  position: absolute;
+  margin-left: -26px; /* Adjust margin on smaller screens */
+  border-radius: 100px;
+  border: 2px solid #e6b7eca1;
+}
+
+input[type='checkbox'] {
+  visibility: hidden;
+}
+
+input:checked + span {
+  text-decoration: line-through
+}
+
+.todo:hover input:checked + span::before, input:checked + span::before {
+  background: url(../img/check.svg) 50% 50% no-repeat #09bb21;
+  border-color: #09bb21;
+  background-size: 9px;
+}
+
+.todo:hover span::before {
+  border-color: #eee;
+}
+
+.todo .delete-btn  {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #eee;
+  font-size: 20px; 
+}
+
+.todos-container  {
+  height: 200px; 
+  overflow: overlay;
+}
+
+/* Scrollbar styles */
+.todos-container::-webkit-scrollbar-track  {
+  background: rgb(247, 247, 247);
+  border-radius: 20px
+}
+
+.todos-container::-webkit-scrollbar  {
+  width: 0;
+}
+
+.todos-container:hover::-webkit-scrollbar  {
+  width: 5px; 
+}
+
+.todos-container::-webkit-scrollbar-thumb  {
+  background: #d5d5d5;
+  border-radius: 20px;
+}
+
+.filters {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px; 
+}
+
+.filter {
+  color: #eee;
+  padding: 5px 10px;
+  border-radius: 100px;
+  border: 2px solid #e6b7eca1;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.filter.active {
+  background-color: #e6b7eca1;
+}
+
+.delete-all {
+  display: flex;
+  color: #eee;
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #e6b7eca1;
+  border-radius: 5px;
+  font-size: 15px;
+  
+}
+
+.delete-all:hover {
+  background-color: #e951fda1;
+}
+
+
+@media screen and (max-width: 410px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .container {
+    padding: 26px;
+  }
+
+  .todo-input {
+    font-size: 12px;
+  }
+
+  .add-button {
+    font-size: 21px;
+    width: 35px;
+    height: 35px;
+    padding: 0;
+  }
+
+  .todo label {
+    font-size: 12px;
+  }
+
+  
+
+  .todo .delete-btn {
+    font-size: 18px;
+  }
+
+  .filter {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+
+  .delete-all {
+    font-size: 12px;
+    padding: 7px 10px;
+  }
+  .sidebar{
+      width: 200px;
+  }
+  
+}
