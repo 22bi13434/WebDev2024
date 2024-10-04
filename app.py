@@ -32,6 +32,7 @@ model = genai.GenerativeModel(
   model_name="gemini-1.5-pro",
   generation_config=generation_config,
 )
+
 app = Flask(__name__)
 app.secret_key = "abcabcabc"
 app.permanent_session_lifetime = timedelta(days=10)
@@ -106,25 +107,32 @@ def login():
 def change_password():
     if 'user' not in session:
         return redirect(url_for('login'))
+    
     if request.method == 'POST':
         current_password = request.form['current_password'].encode('utf-8')
         new_password = request.form['new_password'].encode('utf-8')
         confirm_new_password = request.form['confirm_new_password'].encode('utf-8')
+
         if new_password != confirm_new_password:
             flash('New passwords do not match')
             return render_template('change_password.html', message="New passwords do not match")
+        
         user_doc = db.collection('users').document(session['user']).get()
+
         if user_doc.exists:
             user_data = user_doc.to_dict()
             combined_pw = f"{user_data['salt']}{current_password}"
+
             if user_data['password'] != hashlib.sha256(combined_pw.encode('utf-8')).hexdigest():
                 flash('Current password is incorrect')
                 return render_template('change_password.html', message="Current password is incorrect")
+            
             new_combined_pw = f"{user_data['salt']}{new_password}"
             new_hashed_password = hashlib.sha256(new_combined_pw.encode('utf-8')).hexdigest()
             db.collection('users').document(session['user']).update({'password': new_hashed_password})
             flash('Password changed successfully')
             return redirect(url_for('todo_list'))
+        
     return render_template('change_password.html')
 
 @app.route('/logout')
