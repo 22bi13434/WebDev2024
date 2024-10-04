@@ -18,7 +18,7 @@ Group Members and Task Assignment
 * Nguyen Xuan Hong Vu – ID: 22BI13479 – Register page design and logic, Report
 * Nguyen Quoc Duong – ID: BI12-123 – Login page design and logic, Report
 
-App Design Snapshot
+App Snapshot
 =======================
 ### Login
 ![Login](snapshot/login.png)
