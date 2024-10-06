@@ -4,12 +4,11 @@ USTH ICT 2024 Web Application Development
 Student Info
 =======================
 
-<<<<<<< HEAD
 * Name: Phan Việt Tú
 * ID: 22BI13443
 * Group ID: 3
 * Project Name: To-Do List App
-=======
+
 Group Members and Task Assignment             
 =======================
 * Bui Quang Trung - ID: 22BI13434 (Leader) – App initial set up, backend code, App Testing
