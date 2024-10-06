@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit profile - Todo List App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .user-circle {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .user-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .photo-edit-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .name-container, .email-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .name-edit-icon, .email-info-icon {
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #fbe1ffa1;
+        }
+        #profileImage {
+            transition: filter 0.3s ease;
+        }
+        .user-circle:hover #profileImage {
+            filter: brightness(70%);
+        }
+
+        .email-info-icon {
+            position: relative;
+        }
+        .email-info-icon:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .tooltip-text {
+            visibility: hidden;
+            width: 120px;
+            font-weight: 300;
+            background-color: #fbe1ffa1;
+            color: #555555;
+            font-family: "Poppins", system-ui;
+            font-size: 12px;
+            text-align: center;
+            border-radius: 5px;
+            padding: 10px;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1;
+        }
+        .saveChanges:disabled{
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="menu-button" onclick="showSidebar()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="26" fill="white" viewBox="0 96 960 960" width="26">
+                <path d="M120 816v-60h720v60H120Zm0-210v-60h720v60H120Zm0-210v-60h720v60H120Z"/>
+            </svg>
+        </ul>
+        <ul class="sidebar">
+            <li onclick="hideSidebar()">
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 96 960 960" width="26">
+                        <path d="m249 849-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z"/>
+                    </svg>
+                </a>
+            </li>
+            <li><a href="/todo_list"><i class="fa-solid fa-house"></i></i>Home</a></li>
+            <li><a style="color: rgb(204 138 183);" href="/edit_profile"><i style="color: rgb(204 138 183);" class="fa-solid fa-user"></i>Edit profile</a></li>
+            <li><a href="/change_password"><i class="fa-solid fa-shield-halved"></i>Change Password</a></li>
+            <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i>Log out</a></li>
+        </ul>
+    </nav>
+    
+    <div style="background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);" class="container">
+        <h1>Edit profile</h1>
+        <div class="user-info">
+            <div class="user-circle">
+                <img id="profileImage" src="{{ user_data.get('profile_image', url_for('static', filename='img/default-user.png')) }}" alt="User Profile Image">
+                <label for="profile_image" class="photo-edit-icon">
+                    <i class="fas fa-camera" aria-hidden="true"></i>
+                </label>
+            </div>
+            <form style="flex-direction: column; gap: 15px;" action="{{ url_for('edit_profile') }}" method="POST" enctype="multipart/form-data">
+                <div class="name-container">
+                    <input style="width: 215px;" type="text" name="name" id="name" value="{{ user_data['name'] }}" placeholder="Enter new name" required readonly>
+                    <i class="fas fa-edit name-edit-icon" onclick="enableNameEdit()"></i>
+                </div>
+                <!-- Email Display (Not Editable) -->
+                <div class="email-container">
+                    <input style="width: 215px;" type="email" name="email" id="email" value="{{ email }}" readonly>
+                    <i class="fas fa-info-circle email-info-icon">
+                        <div class="tooltip-text">Email cannot be changed!</div>
+                    </i>
+                </div>
+                <input type="file" name="profile_image" id="profile_image" accept="image/*" onchange="previewImage(event)" style="display: none;">
+                <button id="saveChanges" class="saveChanges" style="padding: 12px; font-size: 1rem;" type="submit" disabled>Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const menuButton = document.querySelector('.menu-button');
+        const saveButton = document.getElementById('saveChanges');
+        const nameInput = document.getElementById('name');
+        const profileImageInput = document.getElementById('profile_image');
+
+        function showSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.style.right = '0';
+            menuButton.style.display = 'none';
+        }
+        
+        function hideSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.style.right = '-250px';
+            menuButton.style.display = 'block';
+        }
+
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('profileImage');
+                output.src = reader.result;
+                checkChanges(); // Check if changes have been made
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function enableNameEdit() {
+            nameInput.readOnly = false;
+            nameInput.focus();
+        }
+
+        function checkChanges() {
+            const originalName = "{{ user_data['name'] }}";
+            const newName = nameInput.value;
+            const imageChanged = profileImageInput.files.length > 0;
+
+            saveButton.disabled = !(newName !== originalName || imageChanged);
+        }
+
+        checkChanges();
+
+        nameInput.addEventListener('input', checkChanges);
+    </script>
+</body>
+</html>
