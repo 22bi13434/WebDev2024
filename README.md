@@ -4,10 +4,10 @@ USTH ICT 2024 Web Application Development
 Student Info
 =======================
 
-* Name: Bùi Quang Trung
-* ID: 22BI13434
-* Group ID: 03
-* Project Name: Todo List App
+* Name: Phan Việt Tú
+* ID: 22BI13443
+* Group ID: 3
+* Project Name: To-Do List App
 
 Group Members and Task Assignment             
 =======================
@@ -34,3 +34,4 @@ App Snapshot
 ![Change password](snapshot/change_password.png)
 ### On Mobile Device
 ![On Mobile Device](snapshot/on_mobile_device.png)
+>>>>>>> upstream/main
