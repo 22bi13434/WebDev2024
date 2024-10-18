@@ -7,8 +7,8 @@ Project Info
 
 Group Members and Task Assignment             
 =======================
-* Bui Quang Trung - ID: 22BI13434 (Leader) – App initial set up, backend code, App Testing
-* Bui Le Duc Anh – ID: 22BI13010 – Main page design and logic, backend code, App Testing
+* Bui Quang Trung - ID: 22BI13434 (Leader) – Todo-List page design, backend code, App Testing
+* Bui Le Duc Anh – ID: 22BI13010 – Todo-List page design and logic, backend code, App Testing
 * Phan Viet Tu – ID: 22BI13443 – Change password page design and logic, Code Improvement
 * Hoang Kim Thanh – ID: 22BI13407 – Edit profile page design and logic, Report
 * Nguyen Xuan Hong Vu – ID: 22BI13479 – Register page design and logic, Report
@@ -30,4 +30,3 @@ App Snapshot
 ![Change password](snapshot/change_password.png)
 ### On Mobile Device
 ![On Mobile Device](snapshot/on_mobile_device.png)
->>>>>>> upstream/main
