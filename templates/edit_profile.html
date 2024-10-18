@@ -6,6 +6,7 @@
     <title>Edit profile - Todo List App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -65,6 +66,7 @@
             filter: brightness(70%);
         }
 
+        /* Tooltip for email info icon */
         .email-info-icon {
             position: relative;
         }
@@ -127,7 +129,7 @@
         <h1>Edit profile</h1>
         <div class="user-info">
             <div class="user-circle">
-                <img id="profileImage" src="{{ user_data.get('profile_image', url_for('static', filename='img/default-user.png')) }}" alt="User Profile Image">
+                <img id="profileImage" src="{{ user_data['profile_image'] if user_data['profile_image'] else url_for('static', filename='img/default-user.png') }}" alt="User Profile Image">
                 <label for="profile_image" class="photo-edit-icon">
                     <i class="fas fa-camera" aria-hidden="true"></i>
                 </label>
@@ -188,12 +190,26 @@
             const newName = nameInput.value;
             const imageChanged = profileImageInput.files.length > 0;
 
+            // Enable button if name is changed or a new image is selected
             saveButton.disabled = !(newName !== originalName || imageChanged);
         }
 
+        // Initial check to disable the button
         checkChanges();
 
+        // Listen for changes in the name input
         nameInput.addEventListener('input', checkChanges);
+
+        window.onload = function() {
+                var messages = "{{ get_flashed_messages()|join(',,') }}".split(',,');
+                if (messages.length > 0) {
+                    var lastMessage = messages[messages.length - 1];
+                    if (lastMessage) {
+                        alert(lastMessage);
+                    }
+                }
+            };
+        </script>
     </script>
 </body>
 </html>

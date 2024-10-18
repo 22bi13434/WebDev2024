@@ -6,7 +6,7 @@
     <title>Todo List</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,7 +39,6 @@
   overflow-y: auto;
   text-align: center;
 }
-
 #ai-prompt {
   width: calc(100% - 20px); 
   padding: 10px;
@@ -71,7 +70,6 @@
   display: flex; 
   align-items: center; 
 }
-
 #ai-suggestions ul {
   list-style-type: disc; 
   padding-left: 20px;   
@@ -114,19 +112,18 @@
         const menuButton = document.querySelector('.menu-button');
         function showSidebar() {
             const sidebar = document.querySelector('.sidebar');
-            sidebar.style.right = '0'; // Move into view
+            sidebar.style.right = '0';
             menuButton.style.display = 'none';
         }
         
         function hideSidebar() {
             const sidebar = document.querySelector('.sidebar');
-            sidebar.style.right = '-250px'; // Move out of view
+            sidebar.style.right = '-250px';
             menuButton.style.display = 'block';
         }
     </script>
     <div class="user-info">
         <div class="user-circle">
-            <!-- Dynamically show the user's profile image -->
             <img src="{{ user_image }}" alt="User Image">
         </div>
         <h2 class="greeting">Hi, {{ user_name }}!</h2>
@@ -211,7 +208,7 @@
                 if (response.ok) {
                     document.querySelector(`[data-id="${todoId}"]`).remove();
                     if (document.querySelectorAll('.todo').length === 0) {
-                        location.reload(); // Reload to show empty state
+                        location.reload();
                     }
                 } else {
                     alert('Error removing todo');
@@ -268,7 +265,7 @@
   const aiPrompt = document.getElementById('ai-prompt');
   const aiSuggestions = document.getElementById('ai-suggestions');
   const generateAgainButton = document.getElementById('generate-again-button');
-  const askAIButton = document.querySelector('.ai-input-group button'); // Select the button
+  const askAIButton = document.querySelector('.ai-input-group button');
   function checkInput() {
 
   if (aiPrompt.value.trim() !== "") {
@@ -298,10 +295,10 @@ aiPrompt.addEventListener('input', checkInput);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      return response.json(); // Assuming the response is JSON
+      return response.json(); 
     })
     .then(data => {
-      displaySuggestions(data.suggestions); // Assuming the response has a 'suggestions' key
+      displaySuggestions(data.suggestions); 
     })
     .catch((error) => {
       console.error('There was a problem with the fetch operation:', error);
@@ -316,7 +313,7 @@ aiPrompt.addEventListener('input', checkInput);
   function displaySuggestions(suggestions) {
   if (suggestions && suggestions.length > 0) {
     const suggestionList = suggestions.map(suggestion => 
-      `<li>${suggestion}</li>` // Remove individual accept buttons
+      `<li>${suggestion}</li>`
     ).join('');
     aiSuggestions.innerHTML = `<ul>${suggestionList}</ul>`;
       generateAgainButton.style.display = 'block';
@@ -330,8 +327,6 @@ aiPrompt.addEventListener('input', checkInput);
   async function acceptAllSuggestions() {
   const suggestions = Array.from(document.querySelectorAll('#ai-suggestions ul li'))
     .map(li => li.textContent.trim());
-
-  suggestions.reverse();
 
   for (const suggestion of suggestions) {
     try {

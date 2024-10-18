@@ -6,7 +6,7 @@
     <title>Register - Todo List App</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,12 +20,10 @@
   gap: 15px;" action="{{ url_for('register') }}" method="post">
             <input type="text" name="name" placeholder="Name" required>
             <input type="email" name="email" placeholder="Email" required>
-            
             <div class="password-container">
                 <input type="password" id="password" name="password" placeholder="Password" required>
                 <i class="fa fa-eye" id="togglePassword"></i>
             </div>
-
             <div class="password-container">
                 <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
                 <i class="fa fa-eye" id="toggleConfirmPassword"></i>
@@ -34,7 +32,7 @@
         </form>
         </div>
         <script>
-
+            // Toggle visibility for Password
             const togglePassword = document.querySelector('#togglePassword');
             const password = document.querySelector('#password');
     
@@ -45,6 +43,7 @@
                 this.classList.toggle('fa-eye-slash');
             });
     
+            // Toggle visibility for Confirm Password
             const toggleConfirmPassword = document.querySelector('#toggleConfirmPassword');
             const confirmPassword = document.querySelector('#confirm_password');
     
@@ -54,12 +53,14 @@
                 this.classList.toggle('fa-eye');
                 this.classList.toggle('fa-eye-slash');
             });
-        </script>
-        <script>
+        
             window.onload = function() {
-                var message = "{{ message }}";
-                if (message) {
-                    alert(message);
+                var messages = "{{ get_flashed_messages()|join(',,') }}".split(',,');
+                if (messages.length > 0) {
+                    var lastMessage = messages[messages.length - 1];
+                    if (lastMessage) {
+                        alert(lastMessage);
+                    }
                 }
             };
         </script>
