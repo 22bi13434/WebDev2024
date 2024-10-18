@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <style>
+        .ai-popup {
+  display: none; 
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); 
+  z-index: 1000;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.popup-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 600px;
+  position: relative; 
+
+  max-height: 360px; 
+  overflow-y: auto;
+  text-align: center;
+}
+
+#ai-prompt {
+  width: calc(100% - 20px); 
+  padding: 10px;
+  border: 2px solid #e6b7eca1; 
+  border-radius: 20px; 
+  background: transparent;
+  color: #000000;  
+  font-size: 0.8rem;
+  outline: none;
+  font-family: "Poppins", system-ui; 
+}
+
+.popup-content button { 
+  background-color: #e951fda1; 
+  color: #fff;                
+  border: none;                
+  padding: 8px 15px;          
+  margin: 5px;
+  border-radius: 5px;          
+  cursor: pointer;             
+  transition: background-color 0.3s ease; 
+  font-family: "Poppins", system-ui; 
+}
+
+.popup-content button:hover {
+  background-color: #9532a2a1; 
+}
+.ai-input-group {
+  display: flex; 
+  align-items: center; 
+}
+
+#ai-suggestions ul {
+  list-style-type: disc; 
+  padding-left: 20px;   
+  text-align: left;
+}
+#generate-again-button {
+  display: block;   
+  margin: 5px auto; 
+}
+#ask-ai-btn:disabled{
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+    </style>
+    <nav>
+        <ul class="menu-button" onclick="showSidebar()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="26" fill="white" viewBox="0 96 960 960" width="26">
+                <path d="M120 816v-60h720v60H120Zm0-210v-60h720v60H120Zm0-210v-60h720v60H120Z"/>
+            </svg>
+        </ul>
+        <ul class="sidebar">
+            <li onclick="hideSidebar()">
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 96 960 960" width="26">
+                        <path d="m249 849-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z"/>
+                    </svg>
+                </a>
+            </li>
+            <li><a style="color: rgb(204 138 183);" href="/todo_list"><i style="color: rgb(204 138 183);" class="fa-solid fa-house"></i></i>Home</a></li>
+            <li><a href="/edit_profile"><i class="fa-solid fa-user"></i>Edit profile</a></li>
+            <li><a href="/change_password"><i class="fa-solid fa-shield-halved"></i>Change Password</a></li>
+            <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i>Log out</a></li>
+        </ul>
+    </nav>
+
+    <script>
+        const menuButton = document.querySelector('.menu-button');
+        function showSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.style.right = '0'; // Move into view
+            menuButton.style.display = 'none';
+        }
+        
+        function hideSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.style.right = '-250px'; // Move out of view
+            menuButton.style.display = 'block';
+        }
+    </script>
+    <div class="user-info">
+        <div class="user-circle">
+            <!-- Dynamically show the user's profile image -->
+            <img src="{{ user_image }}" alt="User Image">
+        </div>
+        <h2 class="greeting">Hi, {{ user_name }}!</h2>
+    </div>
+<style>
+</style>    
+    <div class="container">
+        <h1>Todo List</h1>
+        <div class="input-container">
+            <form action="{{ url_for('add_todo') }}" method="post" id="add-todo-form">
+                <input class="todo-input" name="todo" id="todo-input" placeholder="Add a new task..." required>
+                <button type="submit" class="add-button">
+                    <i class="fa fa-plus-circle"></i>
+                </button>
+            </form>
+            <button style="margin-left: 5px; border-radius: 10px; font-size: 15px;" class="add-button" id="ai-button">
+                <i class="fas fa-robot"></i>
+              </button>
+            </div>
+            <div class="ai-popup" id="ai-popup">
+              <div class="popup-content">
+                <h1 style="color: #000000;">AI Generation</h1>
+                <div style="margin-bottom: 10px;" class="ai-input-group"> 
+                <textarea id="ai-prompt" placeholder="Describe what you need to do to ask AI..."></textarea>
+                <button id="ask-ai-btn" onclick="askAI()" disabled>Ask AI</button>
+                </div>
+                <div id="ai-suggestions"></div>
+            <div>
+            <button onclick="acceptAllSuggestions()" style="display: none;">Accept</button>
+          </div>
+         
+            <button style="position: absolute; 
+            top: 10px; 
+            right: 10px;
+            background-color: #acacaca1; 
+            border: none;
+            cursor: pointer;" id="close-ai-popup" class="close-button">×</button>
+            
+                <button onclick="generateAgain()" id="generate-again-button" style="display: none;">Generate Again</button>
+              </div>
+            </div>
+        <div class="filters">
+            <div class="filter" data-filter="completed">Complete</div>
+            <div class="filter" data-filter="pending">Incomplete</div>
+            <div class="delete-all">Delete All</div>
+        </div>
+        <div class="todos-container">
+            <ul class="todos">
+                {% for todo in todos %}
+                <li class="todo" data-id="{{ todo.id }}">
+                    <label for="{{ todo.id }}">
+                        <input id="{{ todo.id }}" type="checkbox" {% if todo.status == 'completed' %}checked{% endif %} onchange="updateStatus('{{ todo.id }}', this.checked ? 'completed' : 'pending')">
+                        <span class="{% if todo.status == 'completed' %}checked{% endif %}">{{ todo.name }}</span>
+                    </label>
+                    <button class="delete-btn" onclick="removeTodo('{{ todo.id }}')"><i class="fa fa-times"></i></button>
+                </li>
+                {% endfor %}
+            </ul>
+            {% if not todos %}
+            <img class="empty-image" src="{{ url_for('static', filename='img/empty.svg') }}">
+            {% endif %}
+        
+    <script>
+        function updateStatus(todoId, status) {
+            fetch(`/update_todo/${todoId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `status=${status}`
+            });
+        }
+
+        function removeTodo(todoId) {
+            fetch('/remove_todo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `todo_id=${todoId}`
+            }).then(response => {
+                if (response.ok) {
+                    document.querySelector(`[data-id="${todoId}"]`).remove();
+                    if (document.querySelectorAll('.todo').length === 0) {
+                        location.reload(); // Reload to show empty state
+                    }
+                } else {
+                    alert('Error removing todo');
+                }
+            });
+        }
+
+        const filters = document.querySelectorAll(".filter");
+        let filter = '';
+
+        filters.forEach(function (el) {
+            el.addEventListener("click", (e) => {
+                if (el.classList.contains('active')) {
+                    el.classList.remove('active');
+                    filter = '';
+                } else {
+                    filters.forEach(tag => tag.classList.remove('active'));
+                    el.classList.add('active');
+                    filter = e.target.dataset.filter;
+                }
+                filterTodos();
+            });
+        });
+
+        function filterTodos() {
+            const todos = document.querySelectorAll('.todo');
+            todos.forEach(todo => {
+                const status = todo.querySelector('input[type="checkbox"]').checked ? 'completed' : 'pending';
+                if (filter === '' || filter === status) {
+                    todo.style.display = 'flex';
+                } else {
+                    todo.style.display = 'none';
+                }
+            });
+        }
+
+        document.querySelector('.delete-all').addEventListener('click', () => {
+            if (confirm('Are you sure you want to delete all todos?')) {
+                fetch('/remove_all_todos', {
+                    method: 'POST'
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Error removing all todos');
+                    }
+                });
+            }
+        });
+    </script>
+    <script>
+        const aiButton = document.getElementById('ai-button');
+  const aiPopup = document.getElementById('ai-popup');
+  const aiPrompt = document.getElementById('ai-prompt');
+  const aiSuggestions = document.getElementById('ai-suggestions');
+  const generateAgainButton = document.getElementById('generate-again-button');
+  const askAIButton = document.querySelector('.ai-input-group button'); // Select the button
+  function checkInput() {
+
+  if (aiPrompt.value.trim() !== "") {
+    askAIButton.removeAttribute('disabled');
+  } else {
+    askAIButton.setAttribute('disabled', 'true');
+  }
+}
+aiPrompt.addEventListener('input', checkInput);
+
+  aiButton.addEventListener('click', () => {
+    aiPopup.style.display = 'block';
+  });
+
+  function askAI() {
+    const promptText = aiPrompt.value;
+    aiSuggestions.innerHTML = '<p style="color: #000000;">Loading suggestions...</p>'; 
+
+    fetch('/ask_ai', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `prompt=${promptText}` 
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json(); // Assuming the response is JSON
+    })
+    .then(data => {
+      displaySuggestions(data.suggestions); // Assuming the response has a 'suggestions' key
+    })
+    .catch((error) => {
+      console.error('There was a problem with the fetch operation:', error);
+      aiSuggestions.innerHTML = '<p style="color: #000000;">An error occurred. Please try again later.</p>'; 
+    });
+  }
+  
+  function generateAgain() {
+    askAI(); 
+  }
+
+  function displaySuggestions(suggestions) {
+  if (suggestions && suggestions.length > 0) {
+    const suggestionList = suggestions.map(suggestion => 
+      `<li>${suggestion}</li>` // Remove individual accept buttons
+    ).join('');
+    aiSuggestions.innerHTML = `<ul>${suggestionList}</ul>`;
+      generateAgainButton.style.display = 'block';
+      document.querySelector('.popup-content button[onclick="acceptAllSuggestions()"]').style.display = 'inline-block';
+    } else {
+      aiSuggestions.innerHTML = '<p>No suggestions found. Please try again.</p>';
+      generateAgainButton.style.display = 'none'; 
+    }
+  }
+
+  async function acceptAllSuggestions() {
+  const suggestions = Array.from(document.querySelectorAll('#ai-suggestions ul li'))
+    .map(li => li.textContent.trim());
+
+  suggestions.reverse();
+
+  for (const suggestion of suggestions) {
+    try {
+      const response = await fetch('/add_todo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `todo=${suggestion}`
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error adding todo: ${suggestion}`);
+      }
+
+      console.log(`Added todo: ${suggestion}`);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  aiPopup.style.display = 'none';
+  aiSuggestions.innerHTML = '';
+  location.reload();
+}
+document.getElementById('close-ai-popup').addEventListener('click', () => {
+  aiPopup.style.display = 'none'; 
+});
+  </script>
+</body>
+</html>
